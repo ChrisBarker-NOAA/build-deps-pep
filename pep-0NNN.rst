@@ -84,6 +84,7 @@ Specification
 XXX TOML [#toml]_
 XXX metadata-version
 XXX build dependencies
+XXX what if outdated dependencies are already installed?
 
 
 Rejected Ideas
