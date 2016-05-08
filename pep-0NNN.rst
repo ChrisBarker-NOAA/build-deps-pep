@@ -83,8 +83,9 @@ Specification
 
 XXX TOML [#toml]_
 XXX metadata-version
-XXX build dependencies
+XXX build dependencies https://www.python.org/dev/peps/pep-0508/
 XXX what if outdated dependencies are already installed?
+XXX https://mail.python.org/pipermail/distutils-sig/2016-May/028825.html
 
 
 Rejected Ideas
