@@ -1,0 +1,5 @@
+metadata-version: 1  # Only 1 is valid ATM.
+dependencies:
+    build:
+        - setuptools
+        - wheel>=0.27
