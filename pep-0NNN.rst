@@ -213,6 +213,24 @@ setup.toml
   necessarily match what the file may contain in the future (.e.g is
   knowing the name of a project inerhently part of its setup?).
 
+pymeta.toml
+  Not obvious to newcomers to programming and/or Python.
+
+pypackage.toml & pypackaging.toml
+  Name conflation of what a "package" is (project versus namespace).
+
+pydevelop.toml
+  XXX
+
+pysource.toml
+  XXX
+
+pytools.toml
+  XXX
+
+pysettings.toml
+  XXX
+
 
 References
 ==========
