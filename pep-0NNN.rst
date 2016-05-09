@@ -95,7 +95,12 @@ to why various alternatives were not chosen can be read in the
 
 A top-level ``semantics-version`` key will represent the semantic
 version that the configuration file targets. It will always be set to
-an integer and will default to a value of ``1`` if unspecified.
+an integer and will default to a value of ``1`` if unspecified. The
+version will only be updated when the semantics of how the file's
+contents cannot be interpreted in a backwards-compatible fashion
+(e.g. the version does not need to change if a new table is added to
+the semantics of the file, but if a pre-existing field changes its
+meaning then the semantic version will need to change).
 
 There will be a ``[build]`` table in the configuration file to store
 build-related data. Initially only one key of the table will be
