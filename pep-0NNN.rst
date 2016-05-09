@@ -86,7 +86,9 @@ The build dependencies will be stored in a file named
 format was chosen as it is human-usable (unlike JSON [#json]_), it is
 flexible enough (unlike configparser [#configparser]_), stems from a
 standard (also unlike configparser [#configparser]_), and it is not
-overly complex (unlike YAML [#yaml]_). A more thorough discussion as
+overly complex (unlike YAML [#yaml]_). The TOML format is already in
+use by the Rust community as part of their
+Cargo package manager [#cargo]_. A more thorough discussion as
 to why various alternatives were not chosen can be read in the
 `Other file formats`_ section.
 
@@ -328,6 +330,9 @@ References
 
 .. [#ast_literal_eval] ``ast.literal_eval()``
    (https://docs.python.org/3/library/ast.html#ast.literal_eval)
+
+.. [#cargo] Cargo, Rust's package manager
+   (http://doc.crates.io/)
 
 
 Copyright
