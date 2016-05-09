@@ -1,5 +1,4 @@
 {
-    "metadata version": 1,
     "build": {
         "dependencies": [
             "setuptools",

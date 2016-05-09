@@ -93,11 +93,6 @@ Cargo package manager [#cargo]_. A more thorough discussion as
 to why various alternatives were not chosen can be read in the
 `Other file formats`_ section.
 
-At the top-level, there will be a ``metadata-version`` field. It will
-hold an integer and initially its only valid value will be ``1``. This
-field can be incremented as necessary if semantic changes are made to
-the configuration file which are in no way backwards-compatible.
-
 There will be a ``[build]`` table in the configuration file to store
 build-related data. Initially only one key of the table will be
 valid: ``dependencies``. That key will have a value of a list of
@@ -108,15 +103,14 @@ are required to execute a ``setup.py`` file to generate a wheel).
 For the vast majority of Python projects that rely upon setuptools,
 the ``pyproject.toml`` file wil be::
 
-  metadata-version = 1
-
   [build]
   dependencies = ['setuptools', 'wheel']
 
 All top-level keys and tables are reserved for future use by other
 PEPs except for the ``[tools]`` table. Within that table, tools can
 have users specify configuration data as long as they use a sub-table
-within ``[tools]``, e.g. ``[tools.flit]``.
+within ``[tools]``, e.g. ``[tools.flit]``. The name of the sub-table
+must match the tool's name on the Cheeseshop/PyPI.
 
 
 Rejected Ideas
@@ -145,7 +139,6 @@ allowing for comments).
 An example JSON file for the proposed data would be::
 
     {
-        "metadata version": 1,
         "build": {
             "dependencies": [
                 "setuptools",
@@ -186,7 +179,6 @@ with your install tool needing an install tool to work).
 
 An example YAML file is::
 
-    metadata-version: 1  # Only 1 is valid ATM.
     build:
         dependencies:
             - setuptools
@@ -210,10 +202,6 @@ someone is not aware of that a specific version of configparser is
 expected.
 
 An example INI file is::
-
-    [metadata]
-    # Only 1 is valid ATM.
-    version = 1
 
     [build]
     dependencies = setuptools, wheel>=0.27
