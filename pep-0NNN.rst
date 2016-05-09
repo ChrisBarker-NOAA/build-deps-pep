@@ -93,6 +93,10 @@ Cargo package manager [#cargo]_. A more thorough discussion as
 to why various alternatives were not chosen can be read in the
 `Other file formats`_ section.
 
+A top-level ``semantics-version`` key will represent the semantic
+version that the configuration file targets. It will always be set to
+an integer and will default to a value of ``1`` if unspecified.
+
 There will be a ``[build]`` table in the configuration file to store
 build-related data. Initially only one key of the table will be
 valid: ``dependencies``. That key will have a value of a list of
@@ -102,6 +106,8 @@ are required to execute a ``setup.py`` file to generate a wheel).
 
 For the vast majority of Python projects that rely upon setuptools,
 the ``pyproject.toml`` file wil be::
+
+  semantics-version = 1  # optional; defaults to 1.
 
   [build]
   dependencies = ['setuptools', 'wheel']
@@ -120,6 +126,17 @@ must match the tool's name on the Cheeseshop/PyPI.
 
 Rejected Ideas
 ==============
+
+Other semantic version key names
+--------------------------------
+
+Names other than ``semantics-version`` were considered to represent
+the version of semantics that the configuration file was written for.
+Both ``configuration-version`` and ``metadata-version`` were both
+considered, but were rejected due to how people may confuse the
+key as representing a version of the files contents instead of the
+version of semantics that the file is interpreted under.
+
 
 Other file formats
 ------------------
