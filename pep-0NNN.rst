@@ -18,7 +18,7 @@ Abstract
 ========
 
 This PEP specifies how Python software packages should specify their
-build dependencies (e.g. what dependencies are required to go from
+build dependencies (i.e. what dependencies are required to go from
 source checkout to built wheel). As part of this specification, a new
 configuration file is introduced for software packages to use to
 specify their build dependencies (with the expectation that the same
@@ -82,12 +82,38 @@ Specification
 =============
 
 The build dependencies will be stored in a file named
-``pyproject.toml`` that is written using TOML [#toml]_.
+``pyproject.toml`` that is written using TOML [#toml]_. The TOML
+format was chosen as it is human-usable (unlike JSON [#json]_), it is
+flexible enough (unlike configparser [#configparser]_), stems from a
+standard (also unlike configparser [#configparser]_), and it is not
+overly complex (unlike YAML [#yaml]_). A more thorough discussion as
+to why various alternatives were not chosen can be read in the
+`Other file formats`_ section.
 
-XXX TOML
-XXX metadata-version
-XXX build dependencies https://www.python.org/dev/peps/pep-0508/
-XXX https://mail.python.org/pipermail/distutils-sig/2016-May/028825.html
+At the top-level, there will be a ``metadata-version`` field. It will
+hold an integer and initially its only valid value will be ``1``. This
+field can be incremented as necessary if semantic changes are made to
+the configuration file which are in no way backwards-compatible.
+
+There will be a ``[build]`` table in the configuration file to store
+build-related data. Initially only one key of the table will be
+valid: ``dependencies``. That key will have a value of a list of
+strings representing the PEP 508 dependencies required to build the
+project as a wheel [#wheel]_ (currently that means what dependencies
+are required to execute a ``setup.py`` file to generate a wheel).
+
+For the vast majority of Python projects that rely upon setuptools,
+the ``pyproject.toml`` file wil be::
+
+  metadata-version = 1
+
+  [build]
+  dependencies = ['setuptools', 'wheel']
+
+All top-level keys and tables are reserved for future use by other
+PEPs except for the ``[tools]`` table. Within that table, tools can
+have users specify configuration data as long as they use a sub-table
+within ``[tools]``, e.g. ``[tools.flit]``.
 
 
 Rejected Ideas
