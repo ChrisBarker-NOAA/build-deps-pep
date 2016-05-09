@@ -172,8 +172,9 @@ accepts. While one could standardize on what Python 3 accepts and
 simply vendor the backport of the configparser module, that does mean
 this PEP would have to codify that the backport of configparser must
 be used by all project wishes to consume the metadata specified by
-this PEP. This is overly restrictive when there are other potential
-formats that do not have this issue.
+this PEP. This is overly restrictive and could lead to confusion if
+someone is not aware of that a specific version of configparser is
+expected.
 
 An example INI file is::
 
@@ -183,6 +184,27 @@ An example INI file is::
 
     [dependencies]
     build = setuptools, wheel>=0.27
+
+
+Python literals
+'''''''''''''''
+
+Someone proposed using Python literals as the configuration format.
+All Python programmers would be used to the format, there
+would implicitly be no third-party dependency to read the
+configuration data, and it can be safe if something like
+``ast.literal_eval()`` [#ast_literal_eval]_. The problem is that
+to user Python literals you either end up with something no
+better than JSON, or you end up with something like what
+Bazel [#bazel]_ uses. In the former the issues are the same as JSON.
+In the latter, you end up with people consistently asking for more
+flexibility as users have a hard time ignoring the desire to use some
+feature of Python that they think they need (one of the co-authors has
+direct experience with this from the internal usage of Bazel at
+Google).
+
+There is no example format as one was never put forward for
+consideration.
 
 
 Other file names
@@ -267,6 +289,12 @@ References
 
 .. [#pypa] PyPA
    (https://www.pypa.io)
+
+.. [#bazel] Bazel
+   (http://bazel.io/)
+
+.. [#ast_literal_eval] ``ast.literal_eval()``
+   (https://docs.python.org/3/library/ast.html#ast.literal_eval)
 
 
 Copyright
