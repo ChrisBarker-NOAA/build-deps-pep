@@ -89,9 +89,10 @@ flexible enough (unlike configparser [#configparser]_), stems from a
 standard (also unlike configparser [#configparser]_), and it is not
 overly complex (unlike YAML [#yaml]_). The TOML format is already in
 use by the Rust community as part of their
-Cargo package manager [#cargo]_. A more thorough discussion as
-to why various alternatives were not chosen can be read in the
-`Other file formats`_ section.
+Cargo package manager [#cargo]_ (and in private email stated they have
+been quite happy with their choice of TOML). A more thorough
+discussion as to why various alternatives were not chosen can be read
+in the `Other file formats`_ section.
 
 A top-level ``semantics-version`` key will represent the semantic
 version that the configuration file targets. It will always be set to
