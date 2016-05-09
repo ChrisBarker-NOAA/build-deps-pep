@@ -46,10 +46,11 @@ any dependency information as the only dependency is Python.
 But when a project chooses to use setuptools, the use of an executable
 file like ``setup.py`` becomes an issue. You can't execute a
 ``setup.py`` file without knowing its dependencies, but currently
-there is no standard way to know what those dependencies are without
-executing the ``setup.py`` file where that information is stored. It's
-a catch-22 of a file not being readable without knowing its own
-contents which can't be known unless you read the file.
+there is no standard way to know what those dependencies are in an
+automated fashion without executing the ``setup.py`` file where that
+information is stored. It's a catch-22 of a file not being runnable
+without knowing its own contents which can't be known programmatically
+unless you run the file.
 
 Setuptools tried to solve this with a ``setup_requires`` argument to
 its ``setup()`` function [#setup_args]_. The problem is that no tools
@@ -60,29 +61,29 @@ beings to read, but few set it and since there is no verirication that
 its contents are valid it's very easy for the field to be out-of-date.
 
 All of this has led pip [#pip]_ to simply assume that setuptools is
-necessary when executing a ``setup.py`` file, thus making sure it's
-installed when building a project as e.g. a wheel [#wheel]_. The
-problem with this, though, is it doesn't scale if another project
-began to gain traction in the commnity as setuptools has. It also
-prevents other projects from gaining traction due to the friction
-required to use it with a project when pip can't infer the fact that
-something other than setuptools is required.
+necessary when executing a ``setup.py`` file. The problem with this,
+though, is it doesn't scale if another project began to gain traction
+in the commnity as setuptools has. It also prevents other projects
+from gaining traction due to the friction required to use it with a
+project when pip can't infer the fact that something other than
+setuptools is required.
 
-This PEP specifies a way to list the build dependencies of a project
-in a declarative fashion in a specific file. This allows a project
-to list what build dependencies it has to go from e.g. source
-checkout to wheel, while not falling into the catch-22 trap that a
-``setup.py`` has where tooling can't infer what a project needs to
-build itself. Implementing this PEP will allow projects to specify
-what they depend on upfront so that tools like pip can make sure that
-they are installed in order to build the project (the actual driving
-of the build process is left for another PEP).
+This PEP attempts to rectify the situation by specifying a way to list
+the build dependencies of a project in a declarative fashion in a
+specific file. This allows a project to list what build dependencies
+it has to go from e.g. source checkout to wheel, while not falling
+into the catch-22 trap that a ``setup.py`` has where tooling can't
+infer what a project needs to build itself. Implementing this PEP will
+allow projects to specify what they depend on upfront so that tools
+like pip can make sure that they are installed in order to build the
+project (the actual driving of the build process is not within the
+scope of this PEP).
 
 Specification
 =============
 
 The build dependencies will be stored in a file named
-``pyproject.toml`` that is written using TOML [#toml]_. The TOML
+``pyproject.toml`` that is written in the TOM format [#toml]_. This
 format was chosen as it is human-usable (unlike JSON [#json]_), it is
 flexible enough (unlike configparser [#configparser]_), stems from a
 standard (also unlike configparser [#configparser]_), and it is not
@@ -125,11 +126,11 @@ Other file formats
 ------------------
 
 Several other file formats were put forward for consideration, all
-rejected for varying reasons. Key requirements were that the format
+rejected for various reasons. Key requirements were that the format
 be editable by human beings and have an implementation that can be
 vendored easily by projects. This outright exluded certain formats
-like XML which are not friendly towards people who need to may need to
-edit configuration files by hand.
+like XML which are not friendly towards human beings and were never
+seriously discussed.
 
 
 JSON
