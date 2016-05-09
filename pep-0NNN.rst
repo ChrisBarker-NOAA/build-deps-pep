@@ -5,7 +5,7 @@ Last-Modified: $Date$
 Author: Brett Cannon <brett@python.org>,
         Nathaniel Smith <njs@pobox.com>,
         Donald Stufft <donald@stufft.io>
-BDFL-Delegate: XXX
+BDFL-Delegate: Nick Coghlan
 Discussions-To:	distutils-sig <distutils-sig at python.org>
 Status: Draft
 Type: Standards Track
