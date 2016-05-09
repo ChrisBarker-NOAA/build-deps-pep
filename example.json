@@ -1,7 +1,7 @@
 {
     "metadata version": 1,
-    "dependencies": {
-        "build": [
+    "build": {
+        "dependencies": [
             "setuptools",
             "wheel>=0.27"
         ]

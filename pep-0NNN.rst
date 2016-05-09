@@ -81,10 +81,12 @@ of the build process is left for another PEP).
 Specification
 =============
 
-XXX TOML [#toml]_
+The build dependencies will be stored in a file named
+``pyproject.toml`` that is written using TOML [#toml]_.
+
+XXX TOML
 XXX metadata-version
 XXX build dependencies https://www.python.org/dev/peps/pep-0508/
-XXX what if outdated dependencies are already installed?
 XXX https://mail.python.org/pipermail/distutils-sig/2016-May/028825.html
 
 
@@ -115,8 +117,8 @@ An example JSON file for the proposed data would be::
 
     {
         "metadata version": 1,
-        "dependencies": {
-            "build": [
+        "build": {
+            "dependencies": [
                 "setuptools",
                 "wheel>=0.27"
             ]
@@ -133,7 +135,9 @@ issues with YAML.
 
 One is that the specification is large: 86 pages if printed on
 letter-sized paper. That leaves the possibility that someone may use a
-feature of YAML that works with one parser but not another.
+feature of YAML that works with one parser but not another. It has
+been suggested to standardize on a subset, but that basically means
+creating a new standard.
 
 Two is that YAML itself is not safe by default. The specification
 allows for the arbitrary execution of code which is best avoided when
@@ -154,8 +158,8 @@ with your install tool needing an install tool to work).
 An example YAML file is::
 
     metadata-version: 1  # Only 1 is valid ATM.
-    dependencies:
-        build:
+    build:
+        dependencies:
             - setuptools
             - wheel>=0.27
 
@@ -182,8 +186,8 @@ An example INI file is::
     # Only 1 is valid ATM.
     version = 1
 
-    [dependencies]
-    build = setuptools, wheel>=0.27
+    [build]
+    dependencies = setuptools, wheel>=0.27
 
 
 Python literals
@@ -214,6 +218,9 @@ Several other file names were considered and rejected (although this
 is very much a bikeshedding topic, and so the decision comes down to
 mostly taste).
 
+pysettings.toml
+  Most reasonable alternative.
+
 pypa.toml
   While it makes sense to reference the PyPA [#pypa]_, it is a
   somewhat niche term. It's better to have the file name make sense
@@ -242,16 +249,16 @@ pypackage.toml & pypackaging.toml
   Name conflation of what a "package" is (project versus namespace).
 
 pydevelop.toml
-  XXX
+  The file may contain details not specific to development.
 
 pysource.toml
-  XXX
+  Not directly related to source code.
 
 pytools.toml
-  XXX
+  Misleading as the file is (currently) aimed at project management.
 
-pysettings.toml
-  XXX
+dstufft.toml
+  Too person-specific. ;)
 
 
 References
