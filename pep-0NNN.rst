@@ -83,7 +83,7 @@ Specification
 =============
 
 The build dependencies will be stored in a file named
-``pyproject.toml`` that is written in the TOM format [#toml]_. This
+``pyproject.toml`` that is written in the TOML format [#toml]_. This
 format was chosen as it is human-usable (unlike JSON [#json]_), it is
 flexible enough (unlike configparser [#configparser]_), stems from a
 standard (also unlike configparser [#configparser]_), and it is not
