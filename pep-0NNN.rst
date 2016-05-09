@@ -56,7 +56,7 @@ its ``setup()`` function [#setup_args]_. The problem is that no tools
 can read that information without executing the ``setup.py`` file, but
 the ``setup.py`` file can't be executed necessarily without knowing
 what that argument contains. In practice the field is more for human
-beings to read, but few set it and since there is no verirication that
+beings to read, but few set it and since there is no verification that
 its contents are valid it's very easy for the field to be out-of-date.
 
 All of this has led pip [#pip]_ to simply assume that setuptools is
