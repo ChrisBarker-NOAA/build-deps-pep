@@ -106,6 +106,11 @@ the ``pyproject.toml`` file wil be::
   [build]
   dependencies = ['setuptools', 'wheel']
 
+Because the use of setuptools and wheel are so expansive in the
+community at the moment, tools are expected to use the example
+configuration file above as their default semantics when a
+``pyproject.toml`` file is not present.
+
 All top-level keys and tables are reserved for future use by other
 PEPs except for the ``[tools]`` table. Within that table, tools can
 have users specify configuration data as long as they use a sub-table
