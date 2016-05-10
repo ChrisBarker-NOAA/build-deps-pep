@@ -109,10 +109,20 @@ the file, but if a pre-existing field changes its meaning then the
 semantic version will need to change). Changes to the meaning of the
 versions are expected to occur through a PEP.
 
+Projects are expected to check the value of the ``semantics-version``
+field in their code appropriately. The expectation is tools will do
+something along the lines of::
+
+  if data["package"].get("semantics-version", 1) != 1:
+      raise Exception  # Whatever exception is appropriate for the tool.
+
 There will be a ``[package.build-system]`` sub-table in the
-configuration file to store build-related data. Initially only one key
-of the table will be valid: ``requires``. That key will have a value
-of a list of strings representing the PEP 508 dependencies required to
+configuration file to store build-related data (although the exact
+name of the sub-table is an
+`open issue <#Name of the build-related sub-table>`__ as
+``[package.build]`` is another possibility). Initially only one key of
+the table will be valid: ``requires``. That key will have a value of a
+list of strings representing the PEP 508 dependencies required to
 build the project as a wheel [#wheel]_ (currently that means what
 dependencies are required to execute a ``setup.py`` file to generate a
 wheel).
@@ -137,6 +147,17 @@ other PEPs except for the ``[tool]`` table. Within that table, tools
 can have users specify configuration data as long as they use a
 sub-table within ``[tool]``, e.g. ``[tool.flit]``. The name of the
 sub-table must match the tool's name on the Cheeseshop/PyPI.
+
+
+Open Issues
+===========
+
+Name of the build-related sub-table
+-----------------------------------
+
+The authors of this PEP couldn't decide between the names
+``[package.build]`` and ``[package.build-system]``, and so it is an
+open issue over which one to go with.
 
 
 Rejected Ideas
@@ -223,7 +244,10 @@ code and an optional C extension module. While in and of itself this
 isn't necessary an issue, this becomes more of a problem for projects
 like pip where they would most likely need to vendor PyYAML as a
 dependency so as to be fully self-contained (otherwise you end up
-with your install tool needing an install tool to work).
+with your install tool needing an install tool to work). A
+proof-of-concept re-working of PyYAML has been done to see how easy
+it would be to potentially vendor a simpler version of the library
+which shows it is a possibility.
 
 An example YAML file is::
 
