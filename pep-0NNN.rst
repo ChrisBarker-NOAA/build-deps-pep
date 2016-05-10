@@ -53,12 +53,43 @@ without knowing its own contents which can't be known programmatically
 unless you run the file.
 
 Setuptools tried to solve this with a ``setup_requires`` argument to
-its ``setup()`` function [#setup_args]_. The problem is that no tools
-can read that information without executing the ``setup.py`` file, but
-the ``setup.py`` file can't be executed necessarily without knowing
-what that argument contains. In practice the field is more for human
-beings to read, but few set it and since there is no verification that
-its contents are valid it's very easy for the field to be out-of-date.
+its ``setup()`` function [#setup_args]_. This solution has a number
+of issues, such as:
+
+* No tooling (besides setuptools itself) can access this information
+  without executing the ``setup.py``, but ``setup.py`` can't be
+  executed without having these items installed.
+* While setuptools itself will install anything listed in this, they
+  won't be installed until *during* the execution of the ``setup()``
+  function, which means that the only way to actually use anything
+  added here is through increasingly complex machinations that delay
+  the import and usage of these modules until later on in the
+  execution of the ``setup()`` function.
+* This cannot include ``setuptools`` itself nor can it include a
+  replacement to ``setuptools``, which means that projects such as
+  ``numpy.distutils`` are largely incapable of utilizing it and
+  projects cannot take advantage of newer setuptools features until
+  their users naturally upgrade the version of setuptools to a newer
+  one.
+* The items listed in ``setup_requires`` get implicily installed
+  whenever you execute the ``setup.py`` but one of the common ways
+  that the ``setup.py`` is executed is via another tool, such as
+  ``pip``, who is already managing dependencies. This means that
+  a command like ``pip install spam`` might end up having both
+  pip and setuptools downloading and installing packages and end
+  users needing to configure *both* tools (and for ``setuptools``
+  without being in control of the invocation) to change settings
+  like which repository it installs from. It also means that users
+  need to be aware of the discovery rules for both tools, as one
+  may support different package formats or determine the latest
+  version differently.
+
+This has cumulated in a situation where use of ``setup_requires``
+is rare, where projects tend to either simply copy and paste snippets
+between ``setup.py`` files or they eschew it all together in favor
+of simply documenting elsewhere what they expect the user to have
+manually installed prior to attempting to build or install their
+project.
 
 All of this has led pip [#pip]_ to simply assume that setuptools is
 necessary when executing a ``setup.py`` file. The problem with this,
