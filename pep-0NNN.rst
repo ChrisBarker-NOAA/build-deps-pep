@@ -119,7 +119,7 @@ something along the lines of::
 There will be a ``[package.build-system]`` sub-table in the
 configuration file to store build-related data (although the exact
 name of the sub-table is an
-`open issue <#Name of the build-related sub-table>`__ as
+`open issue <#name-of-the-build-related-sub-table>`__ as
 ``[package.build]`` is another possibility). Initially only one key of
 the table will be valid: ``requires``. That key will have a value of a
 list of strings representing the PEP 508 dependencies required to
