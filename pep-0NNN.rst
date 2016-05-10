@@ -102,10 +102,11 @@ A ``semantics-version`` key within the ``[package]`` table will
 represent the semantic version that the ``[package]`` table
 represents. It will always be set to an integer and will default to a
 value of ``1`` if unspecified. The version will only be updated when
-the semantics of a key or sub-table in the ``[package]`` table cannot
-be interpreted in a backwards-compatible fashion (e.g. the version
-does not need to change if a new table is added to the semantics of
-the file, but if a pre-existing field changes its meaning then the
+the semantics or absence of a key or sub-table in the ``[package]``
+table cannot be interpreted in a backwards-compatible fashion (e.g.
+the version does not need to change if a new table is added to the
+semantics of the file, but if a pre-existing field changes its
+meaning or the behavior when a field is absent changes then the
 semantic version will need to change). Changes to the meaning of the
 versions are expected to occur through a PEP.
 
