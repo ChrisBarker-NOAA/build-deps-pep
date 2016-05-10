@@ -128,7 +128,12 @@ dependencies are required to execute a ``setup.py`` file to generate a
 wheel).
 
 For the vast majority of Python projects that rely upon setuptools,
-the ``pyproject.toml`` file wil be::
+the ``pyproject.toml`` file will be::
+
+  [package.build-system]
+  requires = ['setuptools', 'wheel']  # PEP 508 specifications.
+
+Or, the equivalent but more verbose::
 
   [package]
   semantics-version = 1  # Optional; defaults to 1.
@@ -145,8 +150,14 @@ configuration file above as their default semantics when a
 All other top-level keys and tables are reserved for future use by
 other PEPs except for the ``[tool]`` table. Within that table, tools
 can have users specify configuration data as long as they use a
-sub-table within ``[tool]``, e.g. ``[tool.flit]``. The name of the
-sub-table must match the tool's name on the Cheeseshop/PyPI.
+sub-table within ``[tool]``, e.g. the `flit <https://pypi.python.org/pypi/flit>`_
+tool might store its configuration in ``[tool.flit]``.
+
+We need some mechanism to allocate names within the ``tool.*``
+namespace, to make sure that different projects don't attempt to use
+the same sub-table and collide. Our rule is that a project can use
+the subtable ``tool.$NAME`` if, and only if, they own the entry for
+``$NAME`` in the Cheeseshop/PyPI.
 
 
 Open Issues
@@ -208,7 +219,7 @@ An example JSON file for the proposed data would be::
 
     {
         "build": {
-            "dependencies": [
+            "requires": [
                 "setuptools",
                 "wheel>=0.27"
             ]
@@ -232,7 +243,10 @@ long-term.
 
 Two is that YAML itself is not safe by default. The specification
 allows for the arbitrary execution of code which is best avoided when
-dealing with configuration data. While this PEP is focused on
+dealing with configuration data.  It is of course possible to avoid
+this behavior -- for example, PyYAML provides a ``safe_load`` operation
+-- but if any tool carelessly uses ``load`` instead then they open
+themselves up to arbitrary code execution. While this PEP is focused on
 the building of projects which inherently involves code execution,
 other configuration data such as project name and version number may
 end up in the same file someday where arbitrary code execution is not
@@ -252,7 +266,7 @@ which shows it is a possibility.
 An example YAML file is::
 
     build:
-        dependencies:
+        requires:
             - setuptools
             - wheel>=0.27
 
@@ -276,7 +290,9 @@ expected.
 An example INI file is::
 
     [build]
-    dependencies = setuptools, wheel>=0.27
+    requires =
+        setuptools
+        wheel>=0.27
 
 
 Python literals
