@@ -79,6 +79,7 @@ like pip can make sure that they are installed in order to build the
 project (the actual driving of the build process is not within the
 scope of this PEP).
 
+
 Specification
 =============
 
@@ -89,45 +90,53 @@ flexible enough (unlike configparser [#configparser]_), stems from a
 standard (also unlike configparser [#configparser]_), and it is not
 overly complex (unlike YAML [#yaml]_). The TOML format is already in
 use by the Rust community as part of their
-Cargo package manager [#cargo]_ (and in private email stated they have
-been quite happy with their choice of TOML). A more thorough
+Cargo package manager [#cargo]_ and in private email stated they have
+been quite happy with their choice of TOML. A more thorough
 discussion as to why various alternatives were not chosen can be read
 in the `Other file formats`_ section.
 
-A top-level ``semantics-version`` key will represent the semantic
-version that the configuration file targets. It will always be set to
-an integer and will default to a value of ``1`` if unspecified. The
-version will only be updated when the semantics of how the file's
-contents cannot be interpreted in a backwards-compatible fashion
-(e.g. the version does not need to change if a new table is added to
-the semantics of the file, but if a pre-existing field changes its
-meaning then the semantic version will need to change).
+A top-level ``[package]`` table will represent details specific to the
+package that the project contains.
 
-There will be a ``[build]`` table in the configuration file to store
-build-related data. Initially only one key of the table will be
-valid: ``dependencies``. That key will have a value of a list of
-strings representing the PEP 508 dependencies required to build the
-project as a wheel [#wheel]_ (currently that means what dependencies
-are required to execute a ``setup.py`` file to generate a wheel).
+A ``semantics-version`` key within the ``[package]`` table will
+represent the semantic version that the ``[package]`` table
+represents. It will always be set to an integer and will default to a
+value of ``1`` if unspecified. The version will only be updated when
+the semantics of a key or sub-table in the ``[package]`` table cannot
+be interpreted in a backwards-compatible fashion (e.g. the version
+does not need to change if a new table is added to the semantics of
+the file, but if a pre-existing field changes its meaning then the
+semantic version will need to change). Changes to the meaning of the
+versions are expected to occur through a PEP.
+
+There will be a ``[package.build-system]`` sub-table in the
+configuration file to store build-related data. Initially only one key
+of the table will be valid: ``requires``. That key will have a value
+of a list of strings representing the PEP 508 dependencies required to
+build the project as a wheel [#wheel]_ (currently that means what
+dependencies are required to execute a ``setup.py`` file to generate a
+wheel).
 
 For the vast majority of Python projects that rely upon setuptools,
 the ``pyproject.toml`` file wil be::
 
-  semantics-version = 1  # optional; defaults to 1.
+  [package]
+  semantics-version = 1  # Optional; defaults to 1.
 
-  [build]
-  dependencies = ['setuptools', 'wheel']
+      # Indentation is optional in TOML and has no semantic meaning.
+      [package.build-system]
+      requires = ['setuptools', 'wheel']  # PEP 508 specifications.
 
 Because the use of setuptools and wheel are so expansive in the
-community at the moment, tools are expected to use the example
+community at the moment, build tools are expected to use the example
 configuration file above as their default semantics when a
 ``pyproject.toml`` file is not present.
 
-All top-level keys and tables are reserved for future use by other
-PEPs except for the ``[tools]`` table. Within that table, tools can
-have users specify configuration data as long as they use a sub-table
-within ``[tools]``, e.g. ``[tools.flit]``. The name of the sub-table
-must match the tool's name on the Cheeseshop/PyPI.
+All other top-level keys and tables are reserved for future use by
+other PEPs except for the ``[tool]`` table. Within that table, tools
+can have users specify configuration data as long as they use a
+sub-table within ``[tool]``, e.g. ``[tool.flit]``. The name of the
+sub-table must match the tool's name on the Cheeseshop/PyPI.
 
 
 Rejected Ideas
@@ -142,6 +151,16 @@ Both ``configuration-version`` and ``metadata-version`` were both
 considered, but were rejected due to how people may confuse the
 key as representing a version of the files contents instead of the
 version of semantics that the file is interpreted under.
+
+
+A flatter namespace
+-------------------
+
+An earlier draft of this PEP lacked the ``[package]`` table and had
+all of its contained values one level higher. In the end it was
+decided it would be better to scope package-related details to its own
+table for more clear scoping and easier expansion of this file for
+future use.
 
 
 Other file formats
@@ -187,7 +206,8 @@ One is that the specification is large: 86 pages if printed on
 letter-sized paper. That leaves the possibility that someone may use a
 feature of YAML that works with one parser but not another. It has
 been suggested to standardize on a subset, but that basically means
-creating a new standard.
+creating a new standard specific to this file which is not tractable
+long-term.
 
 Two is that YAML itself is not safe by default. The specification
 allows for the arbitrary execution of code which is best avoided when
