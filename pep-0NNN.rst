@@ -10,8 +10,8 @@ Discussions-To:	distutils-sig <distutils-sig at python.org>
 Status: Draft
 Type: Standards Track
 Content-Type: text/x-rst
-Created: NN-Mmm-2016
-Post-History: NN-Mmm-2016
+Created: 10-May-2016
+Post-History: 10-May-2016
 
 
 Abstract
