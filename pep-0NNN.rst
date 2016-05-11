@@ -287,10 +287,10 @@ desired.
 And finally, the most popular Python implemenation of YAML is
 PyYAML [#pyyaml]_ which is a large project of a few thousand lines of
 code and an optional C extension module. While in and of itself this
-isn't necessary an issue, this becomes more of a problem for projects
-like pip where they would most likely need to vendor PyYAML as a
-dependency so as to be fully self-contained (otherwise you end up
-with your install tool needing an install tool to work). A
+isn't necessarily an issue, this becomes more of a problem for
+projects like pip where they would most likely need to vendor PyYAML
+as a dependency so as to be fully self-contained (otherwise you end
+up with your install tool needing an install tool to work). A
 proof-of-concept re-working of PyYAML has been done to see how easy
 it would be to potentially vendor a simpler version of the library
 which shows it is a possibility.
