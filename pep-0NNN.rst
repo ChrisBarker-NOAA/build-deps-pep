@@ -17,12 +17,12 @@ Post-History: NN-Mmm-2016
 Abstract
 ========
 
-This PEP specifies how Python software packages should specify their
-build dependencies (i.e. what dependencies are required to go from
-source checkout to built wheel). As part of this specification, a new
-configuration file is introduced for software packages to use to
-specify their build dependencies (with the expectation that the same
-configuration file will be used for future configuration details).
+This PEP specifies how Python software packages should specify what
+dependencies they have in order to execute their chosen build system.
+As part of this specification, a new configuration file is introduced
+for software packages to use to specify their build dependencies (with
+the expectation that the same configuration file will be used for
+future configuration details).
 
 
 Rationale
@@ -100,21 +100,33 @@ project when pip can't infer the fact that something other than
 setuptools is required.
 
 This PEP attempts to rectify the situation by specifying a way to list
-the build dependencies of a project in a declarative fashion in a
-specific file. This allows a project to list what build dependencies
-it has to go from e.g. source checkout to wheel, while not falling
-into the catch-22 trap that a ``setup.py`` has where tooling can't
-infer what a project needs to build itself. Implementing this PEP will
-allow projects to specify what they depend on upfront so that tools
-like pip can make sure that they are installed in order to build the
-project (the actual driving of the build process is not within the
-scope of this PEP).
+the minimal dependencies of the build system of a project in a
+declarative fashion in a specific file. This allows a project to list
+what build dependencies it has to go from e.g. source checkout to
+wheel, while not falling into the catch-22 trap that a ``setup.py``
+has where tooling can't infer what a project needs to build itself.
+Implementing this PEP will allow projects to specify what build system
+they depend on upfront so that tools like pip can make sure that they
+are installed in order to run the build system to build the project.
+
+To provide more context and motivation for this PEP, think of the
+(rough) steps required to produce a built artifact for a project:
+
+1. The source checkout of the project.
+2. Installation of the build system.
+3. Execute the build system.
+
+This PEP covers step #2. It is fully expected that a future PEP will
+cover step #3, including how to have the build system dynamically
+specify more dependencies that the build system requires to perform
+its job. The purpose of this PEP though, is to specify the minimal set
+of requirements for the build system to simply begin execution.
 
 
 Specification
 =============
 
-The build dependencies will be stored in a file named
+The build system dependencies will be stored in a file named
 ``pyproject.toml`` that is written in the TOML format [#toml]_. This
 format was chosen as it is human-usable (unlike JSON [#json]_), it is
 flexible enough (unlike configparser [#configparser]_), stems from a
@@ -155,15 +167,57 @@ name of the sub-table is an
 ``[package.build]`` is another possibility). Initially only one key of
 the table will be valid: ``requires``. That key will have a value of a
 list of strings representing the PEP 508 dependencies required to
-build the project as a wheel [#wheel]_ (currently that means what
-dependencies are required to execute a ``setup.py`` file to generate a
-wheel).
+execute the build system (currently that means what dependencies are
+required to execute a ``setup.py`` file).
+
+To provide a type-specific representation of the resulting data from
+the TOML file for illustrative purposes only, the following JSON
+Schema [#jsonschema]_ would match the data format::
+
+  {
+      "$schema": "http://json-schema.org/schema#",
+
+      "type": "object",
+      "additionalProperties": false,
+
+      "properties": {
+          "package": {
+              "type": "object",
+              "additionalProperties": false,
+
+              "properties": {
+                  "semantics-version": {
+                      "type": "integer",
+                      "default": 1
+                  },
+                  "build-system": {
+                      "type": "object",
+                      "additionalProperties": false,
+
+                      "properties": {
+                          "requires": {
+                              "type": "array",
+                              "items": {
+                                  "type": "string"
+                              }
+                          }
+                      },
+                      "required": ["requires"]
+                  }
+              }
+          },
+
+          "tool": {
+              "type": "object"
+          }
+      }
+  }
 
 For the vast majority of Python projects that rely upon setuptools,
 the ``pyproject.toml`` file will be::
 
   [package.build-system]
-  requires = ['setuptools', 'wheel']  # PEP 508 specifications.
+  requires = ["setuptools", "wheel"]  # PEP 508 specifications.
 
 Or, the equivalent but more verbose::
 
@@ -172,7 +226,7 @@ Or, the equivalent but more verbose::
 
       # Indentation is optional in TOML and has no semantic meaning.
       [package.build-system]
-      requires = ['setuptools', 'wheel']  # PEP 508 specifications.
+      requires = ["setuptools", "wheel"]  # PEP 508 specifications.
 
 Because the use of setuptools and wheel are so expansive in the
 community at the moment, build tools are expected to use the example
@@ -182,8 +236,9 @@ configuration file above as their default semantics when a
 All other top-level keys and tables are reserved for future use by
 other PEPs except for the ``[tool]`` table. Within that table, tools
 can have users specify configuration data as long as they use a
-sub-table within ``[tool]``, e.g. the `flit <https://pypi.python.org/pypi/flit>`_
-tool might store its configuration in ``[tool.flit]``.
+sub-table within ``[tool]``, e.g. the
+`flit <https://pypi.python.org/pypi/flit>`_ tool might store its
+configuration in ``[tool.flit]``.
 
 We need some mechanism to allocate names within the ``tool.*``
 namespace, to make sure that different projects don't attempt to use
@@ -442,6 +497,9 @@ References
 
 .. [#cargo] Cargo, Rust's package manager
    (http://doc.crates.io/)
+
+.. [#jsonschema] JSON Schema
+   (http://json-schema.org/)
 
 
 Copyright
