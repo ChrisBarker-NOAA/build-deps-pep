@@ -387,21 +387,31 @@ Python literals
 '''''''''''''''
 
 Someone proposed using Python literals as the configuration format.
-All Python programmers would be used to the format, there
-would implicitly be no third-party dependency to read the
-configuration data, and it can be safe if something like
-``ast.literal_eval()`` [#ast_literal_eval]_. The problem is that
-to user Python literals you either end up with something no
-better than JSON, or you end up with something like what
-Bazel [#bazel]_ uses. In the former the issues are the same as JSON.
-In the latter, you end up with people consistently asking for more
-flexibility as users have a hard time ignoring the desire to use some
-feature of Python that they think they need (one of the co-authors has
-direct experience with this from the internal usage of Bazel at
-Google).
+The file would contain one dict at the top level, with the data all
+inside that dict, with sections defined by the keys. All Python
+programmers would be used to the format, there would implicitly be no
+third-party dependency to read the configuration data, and it can be
+safe if parsed by ``ast.literal_eval()`` [#ast_literal_eval]_.
+Python literals can be identical to JSON, with the added benefit of
+supporting trailing commas and comments. In addition, Python's richer
+data model may be useful for some future configuration needs (e.g. non-string
+dict keys, floating point vs. integer values).
 
-There is no example format as one was never put forward for
-consideration.
+On the other hand, python literals are a Python-specific format, and
+it is anticipated that these data may need to be read by packaging
+tools, etc. that are not written in Python.
+
+An example Python literal file for the proposed data would be::
+
+    # The build configuration
+    {"build": {"requires": ["setuptools",
+                            "wheel>=0.27", # note the trailing comma
+                            # "numpy>=1.10" # a commented out data line
+                            ]
+    # and here is an arbitrary comment.
+               }
+     }
+
 
 
 Other file names
