@@ -1,0 +1,8 @@
+# The build configuration
+{"build": {"requires": ["setuptools",
+                        "wheel>=0.27", # note the trailing comma
+                        # "numpy>=1.10" # a commented out data line
+                       ]
+# and here is an arbitrary comment.
+          }
+}
